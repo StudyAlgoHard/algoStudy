@@ -1,0 +1,41 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+    static int N;
+    static int [] data;
+    static long [][][][][][][] dp;
+    static boolean [][][][][][][] check;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+        data = new int [6];
+        for (int i = 1; i <= N; i++) {
+            data[i] = Integer.parseInt(br.readLine());
+        }
+        dp = new long [6][6][data[1]+1][data[2]+1][data[3]+1][data[4]+1][data[5]+1];
+        check = new boolean [6][6][data[1]+1][data[2]+1][data[3]+1][data[4]+1][data[5]+1];
+        System.out.println(dping(0, 0));
+    }
+    static long dping(int pprev, int prev) {
+        if (data[1] + data[2] + data[3] + data[4] + data[5] == 0) {
+            check[pprev][prev][data[1]][data[2]][data[3]][data[4]][data[5]] = true;
+            dp[pprev][prev][data[1]][data[2]][data[3]][data[4]][data[5]] = 1;
+            return 1;
+        }
+        if (check[pprev][prev][data[1]][data[2]][data[3]][data[4]][data[5]])
+            return dp[pprev][prev][data[1]][data[2]][data[3]][data[4]][data[5]];
+        long temp_sum = 0;
+        for (int i = 1; i <= 5; i++) {
+            if (i == pprev || i == prev || data[i] <= 0) continue;
+            data[i]--;
+            temp_sum += dping(prev, i);
+            data[i]++;
+        }
+        dp[pprev][prev][data[1]][data[2]][data[3]][data[4]][data[5]] = temp_sum;
+        check[pprev][prev][data[1]][data[2]][data[3]][data[4]][data[5]] = true;
+        return temp_sum;
+    }
+}
