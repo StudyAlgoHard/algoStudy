@@ -1,0 +1,39 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        char [] data = br.readLine().toCharArray();
+        if (data.length == 1 && data[0] == 'P') {
+            System.out.println("PPAP");
+            return;
+        }
+        if (data.length < 4) {
+            System.out.println("NP");
+            return;
+        }
+        char [] check = new char [data.length];
+        check[0] = data[0];
+        check[1] = data[1];
+        check[2] = data[2];
+        int index = 3;
+        for (int i = 3; i < data.length; i++) {
+            check[index] = data[i];
+            if (index < 3) {
+                index++;
+                continue;
+            }
+            if (check[index-3] == 'P' && check[index-2] == 'P' && check[index-1] == 'A' && check[index] == 'P') {
+//                check[index-2] = 0; check[index-1] = 0; check[index] = 0;
+                index -= 2;
+            }
+            else index++;
+//            System.out.println(Arrays.toString(check));
+        }
+        if (index != 1) System.out.println("NP");
+        else System.out.println("PPAP");
+    }
+}
