@@ -1,0 +1,58 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
+
+public class Main_PPAP_16120 {
+    public static void main(String[] args)throws IOException {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+
+        String line = bf.readLine();
+
+        Stack<Character> stack = new Stack<>();
+        String answer = "PPAP";
+
+        char temp1;
+        char temp2;
+        int flag = 0;
+        for(int i = 0; i < line.length(); i++){
+            char now = line.charAt(i);
+
+            if(now == 'A'){
+                flag = 1;
+                if(i == line.length()-1){
+                    answer = "NP";
+                    break;
+                }
+                if(line.charAt(i+1) != 'P'){
+                    answer = "NP";
+                    break;
+                }else{
+                    if(stack.size()>1){
+                        temp1 = stack.pop();
+                        temp2 = stack.pop();
+                        if(temp1 != 'P' || temp2 != 'P'){
+                            answer ="NP";
+                            break;
+                        }
+                    }else{
+                        answer = "NP";
+                        break;
+                    }
+                }
+            }else{
+                stack.add('P');
+            }
+
+            System.out.println(stack.size());
+
+        }
+        if (flag == 0){
+            answer = "NP";
+        }
+        if(line.length() == 1 && line.charAt(0) == 'P'){
+            answer = "PPAP";
+        }
+        System.out.println(answer);
+    }
+}
