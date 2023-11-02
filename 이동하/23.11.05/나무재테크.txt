@@ -1,0 +1,108 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+class Node {
+    int r, c;
+    Node (int r, int c) {
+        this.r = r;
+        this.c = c;
+    }
+}
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        st = new StringTokenizer(br.readLine(), " ");
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+
+        int [] [] supply = new int [N+1] [N+1];
+        int [] [] farm_hp = new int [N+1] [N+1];
+        PriorityQueue<Integer> [] [] farm = new PriorityQueue [N+1] [N+1];
+
+        for (int i = 1; i <= N; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            for (int j = 1; j <= N; j++) {
+                supply[i][j] = Integer.parseInt(st.nextToken());
+                farm[i][j] = new PriorityQueue<Integer>((o1, o2) -> o1 - o2);
+                farm_hp[i][j] = 5;
+            }
+        }
+
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
+            int z = Integer.parseInt(st.nextToken());
+            farm[x][y].offer(z);
+        }
+
+//        for (int i = 1; i <= N; i++) {
+//            for (int j = 1; j <= N; j++) {
+//                System.out.print(farm[i][j].size() + " ");
+//            }
+//            System.out.println();
+//        }
+//        System.out.println();
+
+        int [] [] delta = {{-1,-1},{-1,0},{-1,1},{0,-1},{0,1},{1,-1},{1,0},{1,1}};
+
+        for (int g = 0; g < K; g++) {
+            ArrayList<Node> tree_seed_list = new ArrayList<>();
+            for (int r = 1; r <= N; r++) {
+                for (int c = 1; c <= N; c++) {
+                    if (farm[r][c].isEmpty()) continue;
+                    PriorityQueue<Integer> temp_pq = new PriorityQueue<Integer>((o1, o2) -> o1 - o2);
+                    while (!farm[r][c].isEmpty()) {
+                        int tree_age = farm[r][c].peek();
+                        if (farm_hp[r][c] - tree_age >= 0) {
+                            tree_age = farm[r][c].poll();
+                            farm_hp[r][c] -= tree_age;
+                            temp_pq.add(tree_age+1);
+                            if ((tree_age+1) % 5 > 0) continue;
+                            for (int [] d : delta) {
+                                int next_r = r + d[0];
+                                int next_c = c + d[1];
+                                if (next_r <= 0 || next_r > N || next_c <= 0 || next_c > N) continue;
+                                tree_seed_list.add(new Node(r+d[0], c+d[1]));
+                            }
+                        } else break;
+                    }
+                    while (!farm[r][c].isEmpty()) {
+                        farm_hp[r][c] += farm[r][c].poll() / 2;
+                    }
+                    farm[r][c] = temp_pq;
+                }
+            }
+            for (Node n : tree_seed_list) {
+                farm[n.r][n.c].offer(1);
+            }
+            for (int i = 1; i <= N; i++) {
+                for (int j = 1; j <= N; j++) {
+                    farm_hp[i][j] += supply[i][j];
+                }
+            }
+//            for (int i = 1; i <= N; i++) {
+//                for (int j = 1; j <= N; j++) {
+//                    System.out.print(farm[i][j].size() + " ");
+//                }
+//                System.out.println();
+//            }
+//            System.out.println();
+        }
+
+        int answer = 0;
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                answer += farm[i][j].size();
+            }
+        }
+        System.out.println(answer);
+    }
+}

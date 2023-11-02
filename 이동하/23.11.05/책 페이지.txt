@@ -1,0 +1,57 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        int moto = N;
+        int [] answer = new int [10];
+        int level = 1;
+        while (N > 0) {
+            int d = N % 10;
+            N /= 10;
+            int [] temp = new int [10];
+            for (int i = 0; i < 10; i++) {
+                temp[i] = N;
+                if (i > 0 && i <= d) temp[i]++;
+                temp[i] *= level;
+                if (i == d) temp[i] -= level - moto%level - 1;
+            }
+            level *= 10;
+//            System.out.println(Arrays.toString(temp));
+            for (int i = 0; i < 10; i++) {
+                answer[i] += temp[i];
+            }
+        }
+//        System.out.println(Arrays.toString(answer));
+
+        for (int i : answer) {
+            System.out.print(i + " ");
+        }
+    }
+}
+
+/*
+247
+
+000001002003004005.....009
+010011012013014015.....019
+.....
+230231232233234235
+
+00010203040506070809
+1011121314....................19
+2021222324
+
+012
+
+ 0    1    2     3    4     5     6     7    8    9
+24   25   25   25   25   25    25   25   24   24
+20   30   30   30   28   20    20   20   20   20
+0    100  48(100-(47)+1)
+
+44   155  103  55  53   45   45   45    44   44
+ */
