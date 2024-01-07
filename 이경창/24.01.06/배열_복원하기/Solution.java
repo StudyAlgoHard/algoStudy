@@ -8,8 +8,7 @@ import java.io.*;
 public class Solution {
 
     private static int H, W, X, Y;
-    private static int[][] bArr;
-    private static int[][] aArr;
+    private static int[][] arr;
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -20,13 +19,13 @@ public class Solution {
         X = Integer.parseInt(tokenizer.nextToken());
         Y = Integer.parseInt(tokenizer.nextToken());
 
-        aArr = new int[H][W];
-        bArr = new int[H + X][W + Y];
+
+        arr = new int[H + X][W + Y];
 
         for(int i = 0; i < H + X; i++){
             tokenizer = new StringTokenizer(reader.readLine());
             for(int j =0 ; j < W + Y; j++){
-                bArr[i][j] = Integer.parseInt(tokenizer.nextToken());
+                arr[i][j] = Integer.parseInt(tokenizer.nextToken());
             }
         }
 
@@ -37,21 +36,18 @@ public class Solution {
         for(int i = 0; i < H; i++){
             for(int j = 0; j < W; j++){
                 if(i - X >= 0 && j - Y >= 0){
-//                    System.out.println(i + " " + j);
-                    aArr[i][j] = bArr[i][j] - bArr[i - X][j - Y];
-                }else if(i - X < 0 || j - Y < 0){
-                    aArr[i][j] = bArr[i][j];
+                    // 이전의 i - x, j - y 위치 값이 업데이트되고, 그 값을 i, j에 뺄셈한다.
+                    arr[i][j] -= arr[i - X][j - Y];
                 }
             }
         }
 
-        for(int[] arr : aArr){
-            for(int num : arr){
-                System.out.print(num + " ");
+        for(int i = 0; i < H; i++){
+            for(int j = 0; j < W; j++){
+                System.out.print(arr[i][j] + " ");
             }
             System.out.println();
         }
-//        System.out.println(Arrays.deepToString(aArr));
 
         reader.close();
     }
