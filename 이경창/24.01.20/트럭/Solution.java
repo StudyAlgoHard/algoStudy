@@ -27,8 +27,8 @@ public class Solution {
         int left = 0;
         int right = 0;
         int sum = 0;
-        int bumpCnt = 0;
         int time = 0;
+        Queue<Integer> queue = new LinkedList<>();
 
         while(right < n){
 
@@ -42,19 +42,24 @@ public class Solution {
             - 아니라면 left 증가
             * */
 
-            if(bumpCnt < w && (right - left + 1) <= w && sum + arr[right] <= L){
+            if((right - left + 1) <= w && sum + arr[right] <= L){
+                queue.add(right);
                 sum += arr[right++];
-                bumpCnt++;
                 time++;
             }else{
-                while(sum + arr[right] > L && bumpCnt > 0){
-                    bumpCnt--;
-                    time++;
-                    System.out.println(arr[left] + " 가 빠지는 시간");
+                while(queue.size() > 0){
                     sum -= arr[left++];
+                    queue.poll();
+                    time++;
                 }
+//                while(sum + arr[right] > L){
+//                    time++;
+//                    System.out.println(arr[left] + " 가 빠지는 시간");
+//                    sum -= arr[left++];
+//                }
 
 
+                System.out.println("left : " + left + " right : " + right);
             }
             System.out.println("시간 : " + time + " 총합 : "  + sum + " 남은 갯수 : " + (right - left));
         }
