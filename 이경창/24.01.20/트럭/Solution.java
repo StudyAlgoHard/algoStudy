@@ -24,49 +24,41 @@ public class Solution {
             arr[i] = Integer.parseInt(tokenizer.nextToken());
         }
 
-        int left = 0;
-        int right = 0;
-        int sum = 0;
+        Queue<Integer> queue = new LinkedList<>(); // 트럭 갯수가 길이
+
+
+        // (1) 다리 빈 자리는 0으로 추가
+        for(int i = 0; i < w; i++) queue.add(0);
+
         int time = 0;
-        Queue<Integer> queue = new LinkedList<>();
+        int weightIdx = 0;
+        int bridgeWeight = 0;
 
-        while(right < n){
+        while(weightIdx < n){
+            // (1) queue에서 front를 꺼냄, 총 합에서 제거
+            bridgeWeight -= queue.poll();
+            int weight = arr[weightIdx];
 
-            /*
-            (1)
-            - right가 총 길이 보다 작을 때
-            - right - left + 1이 다리 길이보다 작을 때
-            - 현재 트럭 무게 + 다리에 있는 트럭 무게 < 최대하중
-
-            (2)
-            - 아니라면 left 증가
-            * */
-
-            if((right - left + 1) <= w && sum + arr[right] <= L){
-                queue.add(right);
-                sum += arr[right++];
-                time++;
+            // (2) 현재 다리에 트럭을 넣을 수 있다면 넣기
+            if(bridgeWeight + weight <= L){
+                queue.add(weight);
+                bridgeWeight += weight;
+                weightIdx++;
             }else{
-                while(queue.size() > 0){
-                    sum -= arr[left++];
-                    queue.poll();
-                    time++;
-                }
-//                while(sum + arr[right] > L){
-//                    time++;
-//                    System.out.println(arr[left] + " 가 빠지는 시간");
-//                    sum -= arr[left++];
-//                }
-
-
-                System.out.println("left : " + left + " right : " + right);
+                // queue의 빈공간은 0
+                queue.add(0);
             }
-            System.out.println("시간 : " + time + " 총합 : "  + sum + " 남은 갯수 : " + (right - left));
+
+//            System.out.println(time + " 인덱스 : " + weightIdx + " bridgeWeight : " + bridgeWeight);
+            time++;
         }
 
-//        time += w;
-        System.out.println(time);
+        while(bridgeWeight > 0){
+            bridgeWeight -= queue.poll();
+            time++;
+        }
 
+        System.out.println(time);
         reader.close();
     }
 }
