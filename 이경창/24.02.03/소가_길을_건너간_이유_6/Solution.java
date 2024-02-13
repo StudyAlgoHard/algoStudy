@@ -25,6 +25,7 @@ public class Solution {
     }
 
     private static boolean bfs(int row, int col) {
+        System.out.println("row : " + row + " col : " + col);
         Queue<Node> queue = new LinkedList<>();
         boolean[][] visitedBfs = new boolean[N][N];
         queue.add(new Node(col, row));
@@ -32,8 +33,9 @@ public class Solution {
         while (queue.size() > 0) {
             Node node = queue.poll();
 
-            if (node.x != col && node.y != row && arr[node.y][node.x] == 1) return false;
+            if ((node.x != col && node.y != row) && arr[node.y][node.x] == 1) return false;
 
+            count++;
             for (int i = 0; i < 4; i++) {
                 int nx = dx[i] + node.x;
                 int ny = dy[i] + node.y;
@@ -43,11 +45,12 @@ public class Solution {
                 if (visitedBfs[ny][nx]) continue;
                 if (arr[ny][nx] == 1) continue;
                 visitedBfs[ny][nx] = true;
+                System.out.println(ny + " " + nx + " " + i);
                 queue.add(new Node(nx, ny));
             }
         }
 
-        System.out.println(row  + " " + col);
+        System.out.println("결과 : " + row  + " " + col + " " + count);
         return true;
     }
 
@@ -79,9 +82,16 @@ public class Solution {
                 }
             }
 
+            System.out.println("curIdx : " + curIdx);
             visited[y1][x1][curIdx] = true;
             visited[y2][x2][(curIdx + 2) % 4] = true;
+        }
 
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                System.out.print(Arrays.toString(visited[i][j]) + " ");
+            }
+            System.out.println();
         }
 
         for (int i = 0; i < K; i++) {
@@ -96,7 +106,7 @@ public class Solution {
             for (int j = 0; j < N; j++) {
                 if (arr[i][j] == 0) continue;
 
-                result += bfs(i, j) ? 1 : 0;
+                result += (bfs(i, j) == true ? 1 : 0);
             }
         }
 
